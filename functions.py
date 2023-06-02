@@ -17,3 +17,11 @@ def transform(og):
     t = np.divide(t, hsv_max)
 
     return t
+
+def inverse_transform(img_t):
+    hsv_max = [179, 255, 255]
+    t = np.multiply(img_t, hsv_max)
+    t = t.astype("uint8")
+    
+
+    return t
