@@ -7,3 +7,6 @@ def get_banana_preference(flags_for_like):
     for i in range(flags_for_like.shape[0]):
         res=res+(i%4)*flags_for_like[i]
     return res/np.sum(flags_for_like)
+
+def get_time_prediction(ideal_banana, banana_currently):
+    return ideal_banana - banana_currently
