@@ -12,3 +12,13 @@ def get_time_prediction(ideal_banana, banana_currently):
     m = 0.21
     return (ideal_banana - banana_currently)/m 
 
+def get_str_time_prediction(days):
+    if abs(days - round(days)) <= 0.25:
+        text = str(round(days))
+    else:
+        if days - int(days)>0:
+            text = str(int(days)) + '-' + str(int(days)+1)
+        else: 
+            text = str(int(days)-1) + '-' + str(int(days))
+    return text
+
