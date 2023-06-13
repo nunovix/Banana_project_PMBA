@@ -9,9 +9,16 @@ from ultralytics import YOLO
 #for classificatcion
 import keras
 
+from keras import backend as K
+from keras import losses
+
+def loss(y_true, y_pred):
+    weights = K.cast(K.abs(K.argmax(y_true, axis=1) - K.argmax(y_pred, axis=1))/(K.int_shape(y_pred)[1] - 1), dtype='float32')
+    return (1.0 + weights) * losses.categorical_crossentropy(y_true, y_pred)
 
 seg_model = YOLO("yolov8l-seg.pt")
-cla_model = keras.models.load_model("n_data_aug_92.h5")
+cla_model = keras.models.load_model("ordinal_loss_90.h5", custom_objects={ 'loss': loss })
+
 
 def get_seg(image):
     seg_res = seg_model(image)[0]
@@ -26,10 +33,12 @@ def get_seg(image):
     mask = np.zeros_like(image)
     mask = cv2.drawContours(mask, [seg_res.masks.xy[0].astype(int)], 0, (255,255,255), -1)
     seg_image = mask & image
+    xyxy = seg_res.boxes.xyxy[0].numpy().astype(int)
+    crop_image = seg_image[xyxy[1]:xyxy[3], xyxy[0]:xyxy[2] ]
     plt.figure()
-    plt.imshow(seg_image)
+    plt.imshow(crop_image)
     plt.show()
-    return seg_image
+    return crop_image
 
 def seg_n_class(image):
     seg_image = get_seg(image)
@@ -39,4 +48,4 @@ def seg_n_class(image):
     cla_result = cla_model.predict(t_image.reshape(1, 64,64,3))[0]
     print(cla_result)
     print(np.dot(np.array([0,1,2,3]), np.array(cla_result)))
-    return  np.dot(np.array([0,1,2,3]), np.array(cla_result))
+    return np.dot(np.array([0,1,2,3]), np.array(cla_result))
