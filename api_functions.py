@@ -9,7 +9,7 @@ def get_banana_preference(flags_for_like):
     return res/np.sum(flags_for_like)
 
 def get_time_prediction(ideal_banana, banana_currently):
-    m = 0.21
+    m = 0.1864
     return (ideal_banana - banana_currently)/m 
 
 def get_str_time_prediction(days):
