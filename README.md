@@ -1,2 +1,2 @@
 # PMBA_project
-Projeto de PMBA 2023
+Project for the course Learning-Based Multimedia Processing @ IST, spring semester 2023
